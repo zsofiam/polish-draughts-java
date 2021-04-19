@@ -11,11 +11,11 @@ public class Board {
         scanner = new Scanner(System.in);
         System.out.println("Enter board size between 10 and 20: ");
         String input = scanner.nextLine();
-        this.n = Integer.parseInt(input);
+        this.n = validN(input);
         while (this.n < 10 || this.n > 20) {
             System.out.println("Between 10 and 20: ");
             input = scanner.nextLine();
-            this.n = Integer.parseInt(input);
+            this.n = validN(input);
         }
         this.fields = new Pawn[n][n];
 
@@ -48,8 +48,18 @@ public class Board {
                 }
             }
         }
-
     }
+
+    public int validN(String input) {
+        try {
+            this.n = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Between 10 and 20: ");
+            input = scanner.nextLine();
+            validN(input);
+            } return n;
+    }
+
     public void removePawn(int x, int y){
         fields[x][y] = null;
     }
