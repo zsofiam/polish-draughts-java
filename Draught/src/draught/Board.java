@@ -9,6 +9,7 @@ public class Board {
     private Scanner scanner;
     public Board() {
         scanner = new Scanner(System.in);
+        System.out.println("Enter board size: ");
         String input = scanner.nextLine();
         this.n = Integer.parseInt(input);
         this.fields = new Pawn[n][n];
@@ -39,7 +40,7 @@ public class Board {
         count = 0;
         myBreakLabelWhite:
         for (int i = fields.length-1; i >= 0; i--) {
-            for (int j = fields[0].length; j >= 0; j--) {
+            for (int j = fields[0].length-1; j >= 0; j--) {
                 if  ((i+j) % 2 != 0){
                     fields[i][j] = new Pawn(i, j,true);
                     count ++;
@@ -59,10 +60,22 @@ public class Board {
     }
     @Override
     public String toString() {
-        return "Game{" +
-                "n=" + n +
-                ", fields=" + Arrays.toString(fields) +
-                ", scanner=" + scanner +
-                '}';
+        String content = "Game{" +
+                ", fields=\n";
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (int i = 0; i < fields.length; i++) {
+            for (int j = 0; j < fields[0].length; j++) {
+                content += "Row " + (i+1) + ", column " + alphabet.charAt(j) + ": " + fields[i][j] + ", \n";
+            }
+        }
+                content += "}";
+                return content;
     }
+    public static void main(String[] args) {
+
+        Board board = new Board();
+        System.out.println(board.toString());
+    }
+
 }
+
