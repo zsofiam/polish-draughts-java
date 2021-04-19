@@ -109,7 +109,7 @@ public class Board {
                         System.out.print("   ");
                     }
                 } else {
-                    if (i < fields.length / 2) {
+                    if (fields[i][j].isWhite && !fields[i][j].isCrowned) {
                         System.out.print(" 🤡");
                     } else {
                         System.out.print(" 🐸");
