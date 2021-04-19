@@ -10,18 +10,46 @@ public class Board {
     public Board() {
         scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        int n = Integer.parseInt(input);
+        this.n = Integer.parseInt(input);
         this.fields = new Pawn[n][n];
+
+//        initialize every field of board as null
+        for (int i = 0; i < fields.length; i++) {
+            for (int j = 0; j < fields[0].length; j++) {
+                fields[i][j] = null;
+            }
+        }
+//        place black pawns on board
+
+        int count = 0;
+        myBreakLabelBlack:
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[0].length; j++) {
                 if  ((i+j) % 2 != 0){
                     fields[i][j] = new Pawn(i, j,false);
-                }
-                else{
-                    fields[i][j] = null;
+                    count ++;
+                    if (count == n){
+                        break myBreakLabelBlack;
+                    }
                 }
             }
         }
+
+        //        place white pawns on board
+        count = 0;
+        myBreakLabelWhite:
+        for (int i = fields.length-1; i >= 0; i--) {
+            for (int j = fields[0].length; j >= 0; j--) {
+                if  ((i+j) % 2 != 0){
+                    fields[i][j] = new Pawn(i, j,true);
+                    count ++;
+                    if (count == n){
+                        break myBreakLabelWhite;
+                    }
+                }
+            }
+        }
+
     }
     public void removePawn(){
 //        TO DO
