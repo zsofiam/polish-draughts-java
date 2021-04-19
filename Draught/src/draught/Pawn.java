@@ -3,7 +3,7 @@ package draught;
 public class Pawn {
     int positionX;
     int positionY;
-    boolean isWhite;
+    public boolean isWhite;
     boolean isCrowned = false;
 
     public Pawn(int positionX, int positionY, boolean isWhite) {

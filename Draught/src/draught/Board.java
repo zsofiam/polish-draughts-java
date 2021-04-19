@@ -1,11 +1,10 @@
 package draught;
 
-
 import java.util.Scanner;
 
 public class Board {
     private int n;
-    private Pawn[][] fields;
+    public Pawn[][] fields;
     private Scanner scanner;
     public Board() {
         scanner = new Scanner(System.in);
@@ -85,12 +84,49 @@ public class Board {
                 content += "}";
                 return content;
     }
+
+    public void printBoard() {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (int i = 0; i < fields[0].length + 1; i++) {
+            if (i == 0) {
+                System.out.print("   ");
+            } else {
+                if (i > 9) {
+                    System.out.print(i + " ");
+                } else {
+                    System.out.print(i + "  ");
+                }
+            }
+        }
+        System.out.println();
+        for (int i = 0; i < fields.length; i++) {
+            System.out.print(alphabet.charAt(i) + " ");
+            for (int j = 0; j < fields[i].length; j++) {
+                if (fields[i][j] == null) {
+                    if ((i+j) % 2 == 0) {
+                        System.out.print(" 🔲");
+                    } else {
+                        System.out.print("   ");
+                    }
+                } else {
+                    if (i < fields.length / 2) {
+                        System.out.print(" 🤡");
+                    } else {
+                        System.out.print(" 🐸");
+                    }
+                }
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) {
 
         Board board = new Board();
         System.out.println(board.toString());
-        board.movePawn(0,1,0,2);
-        System.out.println(board.toString());
+//        board.movePawn(0,1,0,2);
+//        System.out.println(board.toString());
+        board.printBoard();
     }
 
 }
