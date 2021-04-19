@@ -9,9 +9,14 @@ public class Board {
     private Scanner scanner;
     public Board() {
         scanner = new Scanner(System.in);
-        System.out.println("Enter board size: ");
+        System.out.println("Enter board size between 10 and 20: ");
         String input = scanner.nextLine();
         this.n = Integer.parseInt(input);
+        while (this.n < 10 || this.n > 20) {
+            System.out.println("Between 10 and 20: ");
+            input = scanner.nextLine();
+            this.n = Integer.parseInt(input);
+        }
         this.fields = new Pawn[n][n];
 
 //      place black pawns on board
@@ -22,7 +27,7 @@ public class Board {
                 if  ((i+j) % 2 != 0){
                     fields[i][j] = new Pawn(i, j,false);
                     count ++;
-                    if (count == n){
+                    if (count == n * 2){
                         break myBreakLabelBlack;
                     }
                 }
@@ -37,7 +42,7 @@ public class Board {
                 if  ((i+j) % 2 != 0){
                     fields[i][j] = new Pawn(i, j,true);
                     count ++;
-                    if (count == n){
+                    if (count == n * 2){
                         break myBreakLabelWhite;
                     }
                 }
