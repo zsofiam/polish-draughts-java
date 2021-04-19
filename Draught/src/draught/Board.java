@@ -14,13 +14,6 @@ public class Board {
         this.n = Integer.parseInt(input);
         this.fields = new Pawn[n][n];
 
-//        initialize every field of board as null
-        for (int i = 0; i < fields.length; i++) {
-            for (int j = 0; j < fields[0].length; j++) {
-                fields[i][j] = null;
-            }
-        }
-
 //      place black pawns on board
         int count = 0;
         myBreakLabelBlack:
