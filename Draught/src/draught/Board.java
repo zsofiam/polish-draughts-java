@@ -53,6 +53,8 @@ public class Board {
         Pawn pawn = fields[fromX][fromY];
         fields[toX][toY] = pawn;
         fields[fromX][fromY] = null;
+        pawn.setPositionX(toX);
+        pawn.setPositionY(toY);
     }
 
     @Override
@@ -71,6 +73,8 @@ public class Board {
     public static void main(String[] args) {
 
         Board board = new Board();
+        System.out.println(board.toString());
+        board.movePawn(0,1,0,2);
         System.out.println(board.toString());
     }
 
