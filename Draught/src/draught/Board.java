@@ -1,6 +1,6 @@
 package draught;
 
-import java.util.Arrays;
+
 import java.util.Scanner;
 
 public class Board {
@@ -20,8 +20,8 @@ public class Board {
                 fields[i][j] = null;
             }
         }
-//        place black pawns on board
 
+//      place black pawns on board
         int count = 0;
         myBreakLabelBlack:
         for (int i = 0; i < fields.length; i++) {
@@ -36,7 +36,7 @@ public class Board {
             }
         }
 
-        //        place white pawns on board
+//      place white pawns on board
         count = 0;
         myBreakLabelWhite:
         for (int i = fields.length-1; i >= 0; i--) {
@@ -52,17 +52,21 @@ public class Board {
         }
 
     }
-    public void removePawn(){
-//        TO DO
+    public void removePawn(int x, int y){
+        fields[x][y] = null;
     }
-    public void movePawn(){
-//        TO DO
+
+    public void movePawn(int fromX, int fromY, int toX, int toY){
+        Pawn pawn = fields[fromX][fromY];
+        fields[toX][toY] = pawn;
+        fields[fromX][fromY] = null;
     }
+
     @Override
     public String toString() {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String content = "Game{" +
                 ", fields=\n";
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[0].length; j++) {
                 content += "Row " + (i+1) + ", column " + alphabet.charAt(j) + ": " + fields[i][j] + ", \n";
