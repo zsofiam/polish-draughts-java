@@ -24,10 +24,10 @@ public class Board {
         myBreakLabelBlack:
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[0].length; j++) {
-                if  ((i+j) % 2 != 0){
-                    fields[i][j] = new Pawn(i, j,false);
-                    count ++;
-                    if (count == n * 2){
+                if ((i + j) % 2 != 0) {
+                    fields[i][j] = new Pawn(i, j, false);
+                    count++;
+                    if (count == n * 2) {
                         break myBreakLabelBlack;
                     }
                 }
@@ -37,12 +37,12 @@ public class Board {
 //      place white pawns on board
         count = 0;
         myBreakLabelWhite:
-        for (int i = fields.length-1; i >= 0; i--) {
-            for (int j = fields[0].length-1; j >= 0; j--) {
-                if  ((i+j) % 2 != 0){
-                    fields[i][j] = new Pawn(i, j,true);
-                    count ++;
-                    if (count == n * 2){
+        for (int i = fields.length - 1; i >= 0; i--) {
+            for (int j = fields[0].length - 1; j >= 0; j--) {
+                if ((i + j) % 2 != 0) {
+                    fields[i][j] = new Pawn(i, j, true);
+                    count++;
+                    if (count == n * 2) {
                         break myBreakLabelWhite;
                     }
                 }
@@ -57,14 +57,15 @@ public class Board {
             System.out.println("Between 10 and 20: ");
             input = scanner.nextLine();
             validN(input);
-            } return n;
+        }
+        return n;
     }
 
-    public void removePawn(int x, int y){
+    public void removePawn(int x, int y) {
         fields[x][y] = null;
     }
 
-    public void movePawn(int fromX, int fromY, int toX, int toY){
+    public void movePawn(int fromX, int fromY, int toX, int toY) {
         Pawn pawn = fields[fromX][fromY];
         if (validateMove(pawn, toX, toY) && isItEmpty(toX, toY)) {
             fields[toX][toY] = pawn;
@@ -77,15 +78,16 @@ public class Board {
     @Override
     public String toString() {
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder content = new StringBuilder("Game{" +
+        StringBuilder builder = new StringBuilder("Game{" +
                 ", fields=\n");
+
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[0].length; j++) {
-                content.append("Row ").append(i + 1).append(", column ").append(alphabet.charAt(j)).append(": ").append(fields[i][j]).append(", \n");
+                builder.append("Row " + (i + 1) + ", column " + alphabet.charAt(j) + ": " + fields[i][j] + ", \n");
             }
         }
-                content.append("}");
-                return content.toString();
+        builder.append("}");
+        return builder.toString();
     }
 
     public void printBoard() {
@@ -106,7 +108,7 @@ public class Board {
             System.out.print(alphabet.charAt(i) + " ");
             for (int j = 0; j < fields[i].length; j++) {
                 if (fields[i][j] == null) {
-                    if ((i+j) % 2 == 0) {
+                    if ((i + j) % 2 == 0) {
                         System.out.print(" - ");
                     } else {
                         System.out.print("   ");
