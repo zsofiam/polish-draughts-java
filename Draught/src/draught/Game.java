@@ -16,7 +16,7 @@ public class Game {
 
     public Board getBoard(){
         return this.board;
-}
+    }
     public void start() {
         board = new Board();
         board.printBoard();
@@ -70,9 +70,9 @@ public class Game {
             int col = Integer.parseInt(coordinate.substring(1)) - 1;
             return new int[]{row, col};
         }
-    catch (NumberFormatException e){
+        catch (NumberFormatException e){
             return null;
-    }
+        }
     }
 
     public boolean checkForWinner(Pawn[][] fields, int player) {
@@ -136,6 +136,6 @@ public class Game {
 //        while (!checkForWinner(fields, game.player)) {
 //            game.playRound();
 //
-        }
+    }
 
 }
