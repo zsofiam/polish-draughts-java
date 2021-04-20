@@ -135,15 +135,7 @@ public class Board {
         return fields[x][y] == null;
     }
 
-    public static void main(String[] args) {
 
-        Board board = new Board();
-        System.out.println(board.toString());
-        board.printBoard();
-        board.movePawn(3,0,4,1);
-//        System.out.println(board.toString());
-        board.printBoard();
-    }
 
 }
 
