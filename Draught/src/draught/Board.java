@@ -6,6 +6,7 @@ public class Board {
     private int n;
     public Pawn[][] fields;
     private Scanner scanner;
+    public static int[] lastMove = new int[2];
     public Board() {
         scanner = new Scanner(System.in);
         System.out.println("Enter board size between 10 and 20: ");
@@ -65,24 +66,26 @@ public class Board {
 
     public void movePawn(int fromX, int fromY, int toX, int toY){
         Pawn pawn = fields[fromX][fromY];
-        fields[toX][toY] = pawn;
-        fields[fromX][fromY] = null;
-        pawn.setPositionX(toX);
-        pawn.setPositionY(toY);
+        if (validateMove(pawn, toX, toY) && isItEmpty(toX, toY)) {
+            fields[toX][toY] = pawn;
+            fields[fromX][fromY] = null;
+            pawn.setPositionX(toX);
+            pawn.setPositionY(toY);
+        }
     }
 
     @Override
     public String toString() {
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String content = "Game{" +
-                ", fields=\n";
+        StringBuilder content = new StringBuilder("Game{" +
+                ", fields=\n");
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[0].length; j++) {
-                content += "Row " + (i+1) + ", column " + alphabet.charAt(j) + ": " + fields[i][j] + ", \n";
+                content.append("Row ").append(i + 1).append(", column ").append(alphabet.charAt(j)).append(": ").append(fields[i][j]).append(", \n");
             }
         }
-                content += "}";
-                return content;
+                content.append("}");
+                return content.toString();
     }
 
     public void printBoard() {
@@ -120,11 +123,22 @@ public class Board {
         }
     }
 
+    private boolean validateMove(Pawn pawn, int targetX, int targetY) {
+        return (pawn.getPositionY() + pawn.getPositionX()) % 2 == (targetY + targetX) % 2 && //not on white tile AND
+                (pawn.getPositionX() != targetX && pawn.getPositionY() != targetY) && //not the same coordinates AND
+                Math.abs(targetY - pawn.getPositionY()) == 1 && Math.abs(targetX - pawn.getPositionX()) == 1; //diagonal move indicates 1 tile difference from X AND Y
+    }
+
+    private boolean isItEmpty(int x, int y) {
+        return fields[x][y] == null;
+    }
+
     public static void main(String[] args) {
 
         Board board = new Board();
         System.out.println(board.toString());
-//        board.movePawn(0,1,0,2);
+        board.printBoard();
+        board.movePawn(3,0,4,1);
 //        System.out.println(board.toString());
         board.printBoard();
     }
