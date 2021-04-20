@@ -104,15 +104,15 @@ public class Board {
             for (int j = 0; j < fields[i].length; j++) {
                 if (fields[i][j] == null) {
                     if ((i+j) % 2 == 0) {
-                        System.out.print(" 🔲");
+                        System.out.print(" - ");
                     } else {
                         System.out.print("   ");
                     }
                 } else {
                     if (fields[i][j].isWhite && !fields[i][j].isCrowned) {
-                        System.out.print(" 🤡");
+                        System.out.print(" X ");
                     } else if (!fields[i][j].isWhite && !fields[i][j].isCrowned) {
-                        System.out.print(" 🐸");
+                        System.out.print(" O ");
                     }
                 }
             }
