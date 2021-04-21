@@ -6,26 +6,30 @@ public class Board {
     private int n;
     public Pawn[][] fields;
     private Scanner scanner;
-    public static int[] lastMove = new int[2];
+    private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//    public static int[] lastMove = new int[2];
     public Board() {
         scanner = new Scanner(System.in);
-        System.out.println("Enter board size between 10 and 20: ");
-        String input = scanner.nextLine();
-        this.n = validN(input);
-        while (this.n < 10 || this.n > 20) {
-            System.out.println("Between 10 and 20: ");
-            input = scanner.nextLine();
-            this.n = validN(input);
+        while(this.n < 10){
+            this.n = getInputFromUser();
         }
         this.fields = new Pawn[n][n];
+        placeBlackPawnsOnBoards();
+        placeWhitePawnsOnBoards();
 
-//      place black pawns on board
+    }
+
+    public Pawn[][] getFields() {
+        return fields;
+    }
+
+    private void placeBlackPawnsOnBoards(){
         int count = 0;
         myBreakLabelBlack:
         for (int i = 0; i < fields.length; i++) {
             for (int j = 0; j < fields[0].length; j++) {
                 if ((i + j) % 2 != 0) {
-                    fields[i][j] = new Pawn(i, j, false, 2);
+                    fields[i][j] = new Pawn(this, i, j, false);
                     count++;
                     if (count == n * 2) {
                         break myBreakLabelBlack;
@@ -33,14 +37,14 @@ public class Board {
                 }
             }
         }
-
-//      place white pawns on board
-        count = 0;
+    }
+    private void placeWhitePawnsOnBoards(){
+        int count = 0;
         myBreakLabelWhite:
         for (int i = fields.length - 1; i >= 0; i--) {
             for (int j = fields[0].length - 1; j >= 0; j--) {
                 if ((i + j) % 2 != 0) {
-                    fields[i][j] = new Pawn(i, j, true, 1);
+                    fields[i][j] = new Pawn(this, i, j, true);
                     count++;
                     if (count == n * 2) {
                         break myBreakLabelWhite;
@@ -49,16 +53,20 @@ public class Board {
             }
         }
     }
-
-    public int validN(String input) {
+    private int getInputFromUser(){
+        System.out.println("Please enter board size between 10 and 20: ");
+        String input = scanner.nextLine();
+        int size;
         try {
-            this.n = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            System.out.println("Between 10 and 20: ");
-            input = scanner.nextLine();
-            validN(input);
+            size = Integer.parseInt(input);
         }
-        return n;
+        catch (NumberFormatException e){
+            return -1;
+        }
+        if(size < 10 || size > 20){
+            return -1;
+        }
+        return size;
     }
 
     public void removePawn(int x, int y) {
@@ -67,74 +75,58 @@ public class Board {
 
     public void movePawn(int fromX, int fromY, int toX, int toY) {
         Pawn pawn = fields[fromX][fromY];
-        if (validateMove(pawn, toX, toY) && isItEmpty(toX, toY)) {
             fields[toX][toY] = pawn;
             fields[fromX][fromY] = null;
             pawn.setPositionX(toX);
             pawn.setPositionY(toY);
-        }
     }
 
     @Override
     public String toString() {
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder builder = new StringBuilder("Game{" +
-                ", fields=\n");
-
+        StringBuilder builder = new StringBuilder("");
         for (int i = 0; i < fields.length; i++) {
-            for (int j = 0; j < fields[0].length; j++) {
-                builder.append("Row " + (i + 1) + ", column " + alphabet.charAt(j) + ": " + fields[i][j] + ", \n");
+            builder.append(alphabet.charAt(i) + " ");
+            for (int j = 0; j < fields[i].length; j++) {
+                if (fields[i][j] == null && (i + j) % 2 == 0) {
+                    builder.append(" - ");
+                }
+                else if (fields[i][j] == null && (i + j) % 2 != 0){
+                    builder.append("   ");
+                }
+                else if (fields[i][j].isWhite) {
+                    builder.append(" X ");
+                }
+                else if (!fields[i][j].isWhite) {
+                    builder.append(" O ");
+                }
             }
+            builder.append("\n");
         }
-        builder.append("}");
+
         return builder.toString();
     }
 
     public void printBoard() {
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for (int i = 0; i < fields[0].length + 1; i++) {
-            if (i == 0) {
-                System.out.print("   ");
-            } else {
-                if (i > 9) {
-                    System.out.print(i + " ");
-                } else {
-                    System.out.print(i + "  ");
-                }
-            }
-        }
-        System.out.println();
-        for (int i = 0; i < fields.length; i++) {
-            System.out.print(alphabet.charAt(i) + " ");
-            for (int j = 0; j < fields[i].length; j++) {
-                if (fields[i][j] == null) {
-                    if ((i + j) % 2 == 0) {
-                        System.out.print(" - ");
-                    } else {
-                        System.out.print("   ");
-                    }
-                } else {
-                    if (fields[i][j].isWhite && !fields[i][j].isCrowned) {
-                        System.out.print(" X ");
-                    } else if (!fields[i][j].isWhite && !fields[i][j].isCrowned) {
-                        System.out.print(" O ");
-                    }
-                }
-            }
-            System.out.println();
-        }
+        printBoardHeader();
+        printBoardFields();
     }
 
-    private boolean validateMove(Pawn pawn, int targetX, int targetY) {
-        return (pawn.getPositionY() + pawn.getPositionX()) % 2 == (targetY + targetX) % 2 && //not on white tile AND
-                (pawn.getPositionX() != targetX && pawn.getPositionY() != targetY) && //not the same coordinates AND
-                Math.abs(targetY - pawn.getPositionY()) == 1 && Math.abs(targetX - pawn.getPositionX()) == 1; //diagonal move indicates 1 tile difference from X AND Y
+    private void printBoardHeader(){
+        StringBuilder builder = new StringBuilder("   ");
+        for (int j = 0; j < fields[0].length; j++) {
+            builder.append(String.format("%-3d", (j + 1)));
+        }
+        builder.append("\n");
+        System.out.print(builder.toString());
+    }
+
+    private void printBoardFields(){
+        System.out.println(toString());
     }
 
     private boolean isItEmpty(int x, int y) {
         return fields[x][y] == null;
     }
-
 
 
 }
