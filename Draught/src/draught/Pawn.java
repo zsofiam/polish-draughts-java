@@ -33,18 +33,21 @@ public class Pawn {
         return isWhite;
     }
 
-    public void setWhite(boolean white) {
-        isWhite = white;
-    }
-
     public boolean tryToMakeMove(int targetX, int targetY){
-        return ((targetY + targetX) % 2 != 0 &&
-                this.getPositionX() != targetX && this.getPositionY() != targetY &&
+
+        return ( isOnBoard(targetX) && isOnBoard(targetY) &&
+                ((targetY + targetX) % 2 != 0) &&
+                        (this.getPositionX() != targetX && this.getPositionY() != targetY) &&
                 targetIsEmpty(targetX, targetY) &&
                 (targetIsOneStepAway(targetX, targetY) || twoStepsAwayAndEnemyIsBetweenSteps(targetX, targetY)));
     }
+
+    private boolean isOnBoard(int targetX) {
+        return (targetX >= 0 && targetX < this.board.getFields().length);
+    }
+
     private boolean targetIsEmpty(int targetX, int targetY){
-        return (this.board.fields[targetX][targetY] == null);
+        return (this.board.getFields()[targetX][targetY] == null);
     }
     private boolean targetIsOneStepAway(int targetX, int targetY){
         return (Math.abs(targetY - this.getPositionY()) == 1 && Math.abs(targetX - this.getPositionX()) == 1);
@@ -52,29 +55,33 @@ public class Pawn {
     private boolean twoStepsAwayAndEnemyIsBetweenSteps(int targetX, int targetY){
         return (targetIsTwoStepsAway(targetX, targetY) && enemyIsBetweenSteps(targetX, targetY));
     }
-    private boolean targetIsTwoStepsAway(int positionX, int positionY){
-        return (Math.abs(positionY - this.getPositionY()) == 2 && Math.abs(positionX - this.getPositionX()) == 2);
+    private boolean targetIsTwoStepsAway(int targetX, int targetY){
+        return (Math.abs(targetY - this.positionY) == 2 && Math.abs(targetX - this.positionX) == 2);
     }
-    private boolean enemyIsBetweenSteps(int positionX, int positionY){
-        int enemyPositionX = -1;
-        int enemyPositionY = -1;
-        if (positionX > this.positionX){
-            enemyPositionX = positionX - 1;
-        }
-        else if(positionX < this.positionX){
-            enemyPositionX = positionX + 1;
-        }
-        if (positionY > this.positionY){
-            enemyPositionY = positionY - 1;
-        }
-        else if(positionY < this.positionY){
-            enemyPositionY = positionY + 1;
-        }
-        if ((board.fields[enemyPositionX][enemyPositionY].isWhite() && !this.isWhite())
-            || (!board.fields[enemyPositionX][enemyPositionY].isWhite() && this.isWhite())){
-            board.fields[enemyPositionX][enemyPositionY] = null;
+    private boolean enemyIsBetweenSteps(int targetX, int targetY){
+        int[]enemyPosition = findEnemyPosition(targetX, targetY);
+        if (board.getFields()[enemyPosition[0]][enemyPosition[1]] != null &&
+                ( (board.getFields()[enemyPosition[0]][enemyPosition[1]].isWhite() && !this.isWhite())
+            || (!board.getFields()[enemyPosition[0]][enemyPosition[1]].isWhite() && this.isWhite())) ){
             return true;
         }
         else return false;
+    }
+    public int[] findEnemyPosition(int targetX, int targetY){
+        int enemyPositionX = -1;
+        int enemyPositionY = -1;
+        if (targetX > this.positionX){
+            enemyPositionX = targetX - 1;
+        }
+        else {
+            enemyPositionX = targetX + 1;
+        }
+        if (targetY > this.positionY){
+            enemyPositionY = targetY - 1;
+        }
+        else {
+            enemyPositionY = targetY + 1;
+        }
+        return new int[]{enemyPositionX, enemyPositionY};
     }
 }

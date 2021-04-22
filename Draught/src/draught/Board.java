@@ -4,13 +4,14 @@ import java.util.Scanner;
 
 public class Board {
     private int n;
-    public Pawn[][] fields;
+    private Pawn[][] fields;
     private Scanner scanner;
     private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//    public static int[] lastMove = new int[2];
+
     public Board() {
         scanner = new Scanner(System.in);
-        while(this.n < 10){
+        while(this.n == 0
+        ){
             this.n = getInputFromUser();
         }
         this.fields = new Pawn[n][n];
@@ -31,7 +32,7 @@ public class Board {
                 if ((i + j) % 2 != 0) {
                     fields[i][j] = new Pawn(this, i, j, false);
                     count++;
-                    if (count == n * 2) {
+                    if (count == 1) {
                         break myBreakLabelBlack;
                     }
                 }
@@ -46,7 +47,7 @@ public class Board {
                 if ((i + j) % 2 != 0) {
                     fields[i][j] = new Pawn(this, i, j, true);
                     count++;
-                    if (count == n * 2) {
+                    if (count == 2) {
                         break myBreakLabelWhite;
                     }
                 }
@@ -61,10 +62,10 @@ public class Board {
             size = Integer.parseInt(input);
         }
         catch (NumberFormatException e){
-            return -1;
+            size = 0;
         }
-        if(size < 10 || size > 20){
-            return -1;
+        if(size < 3 || size > 20){
+            size = 0;
         }
         return size;
     }
@@ -75,12 +76,19 @@ public class Board {
 
     public void movePawn(int fromX, int fromY, int toX, int toY) {
         Pawn pawn = fields[fromX][fromY];
-            fields[toX][toY] = pawn;
-            fields[fromX][fromY] = null;
-            pawn.setPositionX(toX);
-            pawn.setPositionY(toY);
-    }
+        removeEnemy(pawn, toX, toY);
+        fields[toX][toY] = pawn;
+        removePawn(fromX, fromY);
+        pawn.setPositionX(toX);
+        pawn.setPositionY(toY);
 
+    }
+    private void removeEnemy(Pawn pawn, int toX, int toY){
+        if (Math.abs(toX - pawn.getPositionX()) == 2 && Math.abs(toY - pawn.getPositionY()) == 2){
+            int[]enemyPosition = pawn.findEnemyPosition(toX,toY);
+            removePawn(enemyPosition[0],enemyPosition[1]);
+        }
+    }
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("");
@@ -123,11 +131,6 @@ public class Board {
     private void printBoardFields(){
         System.out.println(toString());
     }
-
-    private boolean isItEmpty(int x, int y) {
-        return fields[x][y] == null;
-    }
-
 
 }
 
